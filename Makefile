@@ -6,7 +6,7 @@ lexer:
 test:
 	mix test
 
-compile: lexer
+compile:
 	mix compile
 
 clean:

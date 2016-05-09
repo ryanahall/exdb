@@ -1,11 +1,14 @@
 default: compile
 
-compile:
-	erl -noshell -eval 'leex:file("lib/lexer/lexer.xrl")' -s erlang halt
+lexer:
+	erl -noshell -eval 'leex:file("src/lexer/exdb_lexer.xrl", [{includefile, "src/lexer/leexinc.hrl"}, {scannerfile, "src/lexer/exdb_lexer.erl"}])' -s erlang halt
+
+test:
+	mix test
+
+compile: lexer
 	mix compile
 
 clean:
 	rm -rf _build
-	rm lib/lexer/lexer.erl
-
 

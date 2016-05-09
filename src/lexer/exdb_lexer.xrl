@@ -1,19 +1,20 @@
 Definitions.
-L = [a-zA-Z]
+L = [a-zA-Z_]
 D = [0-9]
 WS = [\s\t\n\r]
 C = (<|<=|=|>=|>)
 
 Rules.
 
-select : {token,{set,TokenLine,list_to_atom(TokenChars)}}.
-from   : {token,{set,TokenLine,list_to_atom(TokenChars)}}.
-as     : {token,{set,TokenLine,list_to_atom(TokenChars)}}.
-where  : {token,{set,TokenLine,list_to_atom(TokenChars)}}.
-and    : {token,{set,TokenLine,list_to_atom(TokenChars)}}.
-or     : {token,{set,TokenLine,list_to_atom(TokenChars)}}.
-in     : {token,{set,TokenLine,list_to_atom(TokenChars)}}.
-not    : {token,{set,TokenLine,list_to_atom(TokenChars)}}.
+select : {token,{select,TokenLine,list_to_atom(TokenChars)}}.
+from   : {token,{from,TokenLine,list_to_atom(TokenChars)}}.
+as     : {token,{as,TokenLine,list_to_atom(TokenChars)}}.
+where  : {token,{where,TokenLine,list_to_atom(TokenChars)}}.
+and    : {token,{and,TokenLine,list_to_atom(TokenChars)}}.
+or     : {token,{or,TokenLine,list_to_atom(TokenChars)}}.
+in     : {token,{in,TokenLine,list_to_atom(TokenChars)}}.
+not    : {token,{not,TokenLine,list_to_atom(TokenChars)}}.
+*      : {token,{wildcard,TokenLine,list_to_atom(TokenChars)}}.
 {C}    : {token,{comparator,TokenLine,list_to_atom(TokenChars)}}.
 '{L}+' : S = strip(TokenChars,TokenLen),
          {token,{string,TokenLine,S}}.
@@ -24,8 +25,6 @@ not    : {token,{set,TokenLine,list_to_atom(TokenChars)}}.
 
 
 Erlang code.
-
-atom(TokenChars) -> list_to_atom(TokenChars).
 
 strip(TokenChars,TokenLen) ->
   lists:sublist(TokenChars, 2, TokenLen - 2).

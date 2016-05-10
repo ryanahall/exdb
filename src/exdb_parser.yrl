@@ -1,0 +1,33 @@
+Nonterminals
+query
+query_specification
+select_list
+select_sublist
+table_expression
+from_clause
+table_reference
+table_name
+qualified_name
+schema_name
+catalog_name
+unqualified_schema_name
+qualified_identifier
+where_clause
+search_condition
+boolean_term
+boolean_factor
+boolean_test
+boolean_primary
+predicate
+truth_value.
+
+Terminals
+select
+from alias
+filter
+intersection union set difference
+wildcard
+comparator
+string var integer
+lparen rparen comma.
+

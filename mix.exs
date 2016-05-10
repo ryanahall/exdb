@@ -8,7 +8,7 @@ defmodule Exdb.Mixfile do
      build_embedded: Mix.env == :prod,
      start_permanent: Mix.env == :prod,
      deps: deps,
-     leex_options: [includefile: 'src/lexer/leexinc.hrl']]
+     leex_options: [includefile: 'src/leexinc.hrl']]
   end
 
   # Configuration for the OTP application

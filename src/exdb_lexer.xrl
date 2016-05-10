@@ -14,13 +14,15 @@ and    : {token,{intersection,TokenLine}}.
 or     : {token,{union,TokenLine}}.
 in     : {token,{set,TokenLine}}.
 not    : {token,{difference,TokenLine}}.
-\*     : {token,{wildcard,TokenLine}}.
+*      : {token,{wildcard,TokenLine}}.
+,      : {token,{comma,TokenLine}}.
+(      : {token,{lparen,TokenLine}}.
+)      : {token,{rparen,TokenLine}}.
 {C}    : {token,{comparator,TokenLine,list_to_atom(TokenChars)}}.
 '{L}+' : S = strip(TokenChars,TokenLen),
          {token,{string,TokenLine,S}}.
 {L}+   : {token,{var,TokenLine,list_to_atom(TokenChars)}}.
 {D}+   : {token,{integer,TokenLine,list_to_integer(TokenChars)}}.
-[(),]  : {token,{list_to_atom(TokenChars),TokenLine}}.
 {WS}+  : skip_token.
 
 

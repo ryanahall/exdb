@@ -288,7 +288,7 @@ yysuf(List, N) -> lists:nthtail(N, List).
 %% return signal either an unrecognised character or end of current
 %% input.
 
--file("src/lexer/exdb_lexer.erl", 290).
+-file("src/exdb_lexer.erl", 290).
 yystate() -> 29.
 
 yystate(36, [99|Ics], Line, Tlen, _, _) ->

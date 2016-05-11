@@ -6,25 +6,26 @@ C = (<|<=|=|>=|>)
 
 Rules.
 
-select : {token,{select_tok,TokenLine}}.
-from   : {token,{from_tok,TokenLine}}.
-as     : {token,{alias_tok,TokenLine}}.
-where  : {token,{filter_tok,TokenLine}}.
-and    : {token,{and_tok,TokenLine}}.
-or     : {token,{or_tok,TokenLine}}.
-in     : {token,{in_tok,TokenLine}}.
-not    : {token,{not_tok,TokenLine}}.
-*      : {token,{wildcard_tok,TokenLine}}.
-,      : {token,{comma_tok,TokenLine}}.
-(      : {token,{lparen_tok,TokenLine}}.
-)      : {token,{rparen_tok,TokenLine}}.
-{C}    : {token,{comparator,TokenLine,list_to_atom(TokenChars)}}.
+select : {token,{tk_select,TokenLine}}.
+from   : {token,{tk_from,TokenLine}}.
+as     : {token,{tk_as,TokenLine}}.
+where  : {token,{tk_where,TokenLine}}.
+and    : {token,{tk_and,TokenLine}}.
+or     : {token,{tk_or,TokenLine}}.
+in     : {token,{tk_in,TokenLine}}.
+not    : {token,{tk_not,TokenLine}}.
+*      : {token,{tk_asterisk,TokenLine}}.
+,      : {token,{tk_comma,TokenLine}}.
+.      : {token,{tk_dot,TokenLine}}.
+(      : {token,{tk_lparen,TokenLine}}.
+)      : {token,{tk_rparen,TokenLine}}.
+{C}    : {token,{tk_comparator,TokenLine,list_to_atom(TokenChars)}}.
 "{L}+" : S = strip(TokenChars,TokenLen),
-         {token,{string,TokenLine,S}}.
+         {token,{tk_string,TokenLine,S}}.
 '{L}+' : S = strip(TokenChars,TokenLen),
-         {token,{string,TokenLine,S}}.
-{L}+   : {token,{var,TokenLine,list_to_atom(TokenChars)}}.
-{D}+   : {token,{integer,TokenLine,list_to_integer(TokenChars)}}.
+         {token,{tk_string,TokenLine,S}}.
+{L}+   : {token,{tk_var,TokenLine,list_to_atom(TokenChars)}}.
+{D}+   : {token,{tk_integer,TokenLine,list_to_integer(TokenChars)}}.
 {WS}+  : skip_token.
 
 

@@ -6,19 +6,21 @@ C = (<|<=|=|>=|>)
 
 Rules.
 
-select : {token,{select,TokenLine}}.
-from   : {token,{from,TokenLine}}.
-as     : {token,{alias,TokenLine}}.
-where  : {token,{filter,TokenLine}}.
-and    : {token,{intersection,TokenLine}}.
-or     : {token,{union,TokenLine}}.
-in     : {token,{set,TokenLine}}.
-not    : {token,{difference,TokenLine}}.
-*      : {token,{wildcard,TokenLine}}.
-,      : {token,{comma,TokenLine}}.
-(      : {token,{lparen,TokenLine}}.
-)      : {token,{rparen,TokenLine}}.
+select : {token,{select_tok,TokenLine}}.
+from   : {token,{from_tok,TokenLine}}.
+as     : {token,{alias_tok,TokenLine}}.
+where  : {token,{filter_tok,TokenLine}}.
+and    : {token,{and_tok,TokenLine}}.
+or     : {token,{or_tok,TokenLine}}.
+in     : {token,{in_tok,TokenLine}}.
+not    : {token,{not_tok,TokenLine}}.
+*      : {token,{wildcard_tok,TokenLine}}.
+,      : {token,{comma_tok,TokenLine}}.
+(      : {token,{lparen_tok,TokenLine}}.
+)      : {token,{rparen_tok,TokenLine}}.
 {C}    : {token,{comparator,TokenLine,list_to_atom(TokenChars)}}.
+"{L}+" : S = strip(TokenChars,TokenLen),
+         {token,{string,TokenLine,S}}.
 '{L}+' : S = strip(TokenChars,TokenLen),
          {token,{string,TokenLine,S}}.
 {L}+   : {token,{var,TokenLine,list_to_atom(TokenChars)}}.
@@ -27,8 +29,6 @@ not    : {token,{difference,TokenLine}}.
 
 
 Erlang code.
-
-atom(TokenChars) -> list_to_atom(TokenChars).
 
 strip(TokenChars,TokenLen) ->
   lists:sublist(TokenChars, 2, TokenLen - 2).

@@ -3,17 +3,15 @@ query
 statement
 select_statement
 select_list
-column_ref
+select_elem
+qualified_name
+column_label
 table_expression
 from_clause
 table_list
-table_ref
+table_elem
 table_name
-where_clause
-search_condition
-boolean_term
-boolean_factor
-alias_clause.
+table_label.
 
 Terminals
 tk_select
@@ -29,6 +27,7 @@ tk_comma
 tk_dot
 tk_lparen
 tk_rparen
+tk_semicolon
 tk_comparator
 tk_string
 tk_var
@@ -36,47 +35,44 @@ tk_integer.
 
 Rootsymbol query.
 
-query -> statement.
+query -> statement : '$1'.
 
+%% TODO: add support for other statement types
 statement -> select_statement : '$1'.
 
 select_statement -> tk_select select_list table_expression : {'$1', '$2', '$3'}.
 
-select_list -> tk_asterisk : '$1'.
-select_list -> column_ref : ['$1'].
-select_list -> column_ref tk_comma select_list : ['$1'|'$2'].
+select_list -> select_elem : ['$1'].
+select_list -> select_elem tk_comma select_list : ['$1'|'$3'].
 
-column_ref -> tk_var : extract_val('$1').
+select_elem -> tk_asterisk : '$1'.
+select_elem -> qualified_name : {'$1'}.
+select_elem -> qualified_name tk_as column_label : {'$1', '$3'}.
 
-table_expression -> from_clause : {'$1', nil}.
-table_expression -> from_clause where_clause : {'$1', '$2'}.
+qualified_name -> tk_var : {extract_val('$1')}.
+qualified_name -> table_label tk_dot tk_var : {extract_val('$3'), '$1'}.
 
-from_clause -> tk_from table_list : '$2'.
+column_label -> tk_var : extract_val('$1').
+column_label -> tk_string : extract_val('$1').
 
-table_list -> table_ref : ['$1'].
-table_list -> table_ref tk_comma table_list : ['$1'|'$2'].
+table_expression -> from_clause : '$1'.
 
-table_ref -> table_name : {'$1', nil}.
-table_ref -> table_name alias_clause : {'$1', '$2'}.
+from_clause -> tk_from table_list : {'$2'}.
 
-table_name -> tk_var : extract_val('$1'). 
+table_list -> table_elem : ['$1'].
+table_list -> table_elem tk_comma table_list : ['$1'|'$3'].
 
-where_clause -> tk_where search_condition : '$2'.
+table_elem -> table_name : {'$1'}.
+table_elem -> table_name tk_as table_label : {'$1', '$3'}.
 
-search_condition -> search_condition tk_or search_condition : {'$2', '$1', '$3'}.
-search_condition -> search_condition tk_and search_condition : {'$2', '$1', '$3'}.
-search_condition -> tk_not search_condition :  {'$1', '$2', nil}.
-search_condition -> tk_lparen search_condition tk_rparen : '$2'.
-search_condition -> predicate : '$1'.
+table_name -> tk_var : extract_val('$1').
 
-predicate -> comparison_predicate : '$1'.
-
-comparison_predicate -> column_ref tk_comparator scalar_exp : {'$2', '$1', '$3'}.
-
-alias_clause -> tk_as tk_var : extract_val('$2').
+table_label -> tk_var : extract_val('$1').
+table_label -> tk_string : extract_val('$1').
 
 Erlang code.
 
-extract_val(Token) ->
-  element(3, Token).
+extract_token({Tok, _}) -> Tok.
+
+extract_val({_, _, Val}) -> Val.
 

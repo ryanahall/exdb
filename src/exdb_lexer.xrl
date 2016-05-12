@@ -14,11 +14,12 @@ and    : {token,{tk_and,TokenLine}}.
 or     : {token,{tk_or,TokenLine}}.
 in     : {token,{tk_in,TokenLine}}.
 not    : {token,{tk_not,TokenLine}}.
-*      : {token,{tk_asterisk,TokenLine}}.
+\*     : {token,{tk_asterisk,TokenLine}}.
 ,      : {token,{tk_comma,TokenLine}}.
-.      : {token,{tk_dot,TokenLine}}.
-(      : {token,{tk_lparen,TokenLine}}.
-)      : {token,{tk_rparen,TokenLine}}.
+\.      : {token,{tk_dot,TokenLine}}.
+\(     : {token,{tk_lparen,TokenLine}}.
+\)     : {token,{tk_rparen,TokenLine}}.
+;      : {token,{tk_semicolon,TokenLine}}.
 {C}    : {token,{tk_comparator,TokenLine,list_to_atom(TokenChars)}}.
 "{L}+" : S = strip(TokenChars,TokenLen),
          {token,{tk_string,TokenLine,S}}.

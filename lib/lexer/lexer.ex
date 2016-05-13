@@ -6,4 +6,9 @@ defmodule Lexer do
     |> String.to_char_list
     |> :exdb_lexer.string
   end
+
+  def parse(tokens) do
+    tokens
+    |> :exdb_parser.parse
+  end
 end

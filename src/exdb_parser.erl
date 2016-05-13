@@ -3,8 +3,9 @@
 -file("src/exdb_parser.yrl", 73).
 
 extract_token({Tok, _}) -> Tok.
-
 extract_val({_, _, Val}) -> Val.
+
+build_ast_node(Type, Node) -> Node#{kind => Type, loc => #{start => 0}}.
 
 
 -file("/usr/local/Cellar/erlang/18.3/lib/erlang/lib/parsetools-2.1.1/include/yeccpre.hrl", 0).
@@ -181,7 +182,7 @@ yecctoken2string(Other) ->
 
 
 
--file("src/exdb_parser.erl", 184).
+-file("src/exdb_parser.erl", 185).
 
 -dialyzer({nowarn_function, yeccpars2/7}).
 yeccpars2(0=S, Cat, Ss, Stack, T, Ts, Tzr) ->
@@ -258,10 +259,10 @@ yeccpars2_0(_, _, _, _, T, _, _) ->
  yeccerror(T).
 
 yeccpars2_1(_S, Cat, Ss, Stack, T, Ts, Tzr) ->
- yeccgoto_query(hd(Ss), Cat, Ss, Stack, T, Ts, Tzr).
+ 'yeccgoto_\'Query\''(hd(Ss), Cat, Ss, Stack, T, Ts, Tzr).
 
 yeccpars2_2(_S, Cat, Ss, Stack, T, Ts, Tzr) ->
- yeccgoto_statement(hd(Ss), Cat, Ss, Stack, T, Ts, Tzr).
+ 'yeccgoto_\'Statement\''(hd(Ss), Cat, Ss, Stack, T, Ts, Tzr).
 
 -dialyzer({nowarn_function, yeccpars2_3/7}).
 yeccpars2_3(_S, '$end', _Ss, Stack, _T, _Ts, _Tzr) ->
@@ -295,33 +296,33 @@ yeccpars2_7(S, tk_comma, Ss, Stack, T, Ts, Tzr) ->
  yeccpars1(S, 16, Ss, Stack, T, Ts, Tzr);
 yeccpars2_7(_S, Cat, Ss, Stack, T, Ts, Tzr) ->
  NewStack = yeccpars2_7_(Stack),
- yeccgoto_select_list(hd(Ss), Cat, Ss, NewStack, T, Ts, Tzr).
+ 'yeccgoto_\'SelectList\''(hd(Ss), Cat, Ss, NewStack, T, Ts, Tzr).
 
 yeccpars2_8(S, tk_as, Ss, Stack, T, Ts, Tzr) ->
  yeccpars1(S, 12, Ss, Stack, T, Ts, Tzr);
 yeccpars2_8(_S, Cat, Ss, Stack, T, Ts, Tzr) ->
  NewStack = yeccpars2_8_(Stack),
- yeccgoto_select_elem(hd(Ss), Cat, Ss, NewStack, T, Ts, Tzr).
+ 'yeccgoto_\'SelectElem\''(hd(Ss), Cat, Ss, NewStack, T, Ts, Tzr).
 
 yeccpars2_9(_S, Cat, Ss, Stack, T, Ts, Tzr) ->
- yeccgoto_select_elem(hd(Ss), Cat, Ss, Stack, T, Ts, Tzr).
+ 'yeccgoto_\'SelectElem\''(hd(Ss), Cat, Ss, Stack, T, Ts, Tzr).
 
 yeccpars2_10(_S, Cat, Ss, Stack, T, Ts, Tzr) ->
  NewStack = yeccpars2_10_(Stack),
- yeccgoto_table_label(hd(Ss), Cat, Ss, NewStack, T, Ts, Tzr).
+ 'yeccgoto_\'TableLabel\''(hd(Ss), Cat, Ss, NewStack, T, Ts, Tzr).
 
 yeccpars2_11(_S, tk_as, Ss, Stack, T, Ts, Tzr) ->
  NewStack = yeccpars2_11_tk_as(Stack),
- yeccgoto_qualified_name(hd(Ss), tk_as, Ss, NewStack, T, Ts, Tzr);
+ 'yeccgoto_\'QualifiedName\''(hd(Ss), tk_as, Ss, NewStack, T, Ts, Tzr);
 yeccpars2_11(_S, tk_comma, Ss, Stack, T, Ts, Tzr) ->
  NewStack = yeccpars2_11_tk_comma(Stack),
- yeccgoto_qualified_name(hd(Ss), tk_comma, Ss, NewStack, T, Ts, Tzr);
+ 'yeccgoto_\'QualifiedName\''(hd(Ss), tk_comma, Ss, NewStack, T, Ts, Tzr);
 yeccpars2_11(_S, tk_from, Ss, Stack, T, Ts, Tzr) ->
  NewStack = yeccpars2_11_tk_from(Stack),
- yeccgoto_qualified_name(hd(Ss), tk_from, Ss, NewStack, T, Ts, Tzr);
+ 'yeccgoto_\'QualifiedName\''(hd(Ss), tk_from, Ss, NewStack, T, Ts, Tzr);
 yeccpars2_11(_S, Cat, Ss, Stack, T, Ts, Tzr) ->
  NewStack = yeccpars2_11_(Stack),
- yeccgoto_table_label(hd(Ss), Cat, Ss, NewStack, T, Ts, Tzr).
+ 'yeccgoto_\'TableLabel\''(hd(Ss), Cat, Ss, NewStack, T, Ts, Tzr).
 
 -dialyzer({nowarn_function, yeccpars2_12/7}).
 yeccpars2_12(S, tk_string, Ss, Stack, T, Ts, Tzr) ->
@@ -334,30 +335,30 @@ yeccpars2_12(_, _, _, _, T, _, _) ->
 yeccpars2_13(_S, Cat, Ss, Stack, T, Ts, Tzr) ->
  [_,_|Nss] = Ss,
  NewStack = yeccpars2_13_(Stack),
- yeccgoto_select_elem(hd(Nss), Cat, Nss, NewStack, T, Ts, Tzr).
+ 'yeccgoto_\'SelectElem\''(hd(Nss), Cat, Nss, NewStack, T, Ts, Tzr).
 
 yeccpars2_14(_S, Cat, Ss, Stack, T, Ts, Tzr) ->
  NewStack = yeccpars2_14_(Stack),
- yeccgoto_column_label(hd(Ss), Cat, Ss, NewStack, T, Ts, Tzr).
+ 'yeccgoto_\'ColumnLabel\''(hd(Ss), Cat, Ss, NewStack, T, Ts, Tzr).
 
 yeccpars2_15(_S, Cat, Ss, Stack, T, Ts, Tzr) ->
  NewStack = yeccpars2_15_(Stack),
- yeccgoto_column_label(hd(Ss), Cat, Ss, NewStack, T, Ts, Tzr).
+ 'yeccgoto_\'ColumnLabel\''(hd(Ss), Cat, Ss, NewStack, T, Ts, Tzr).
 
 %% yeccpars2_16: see yeccpars2_4
 
 yeccpars2_17(_S, Cat, Ss, Stack, T, Ts, Tzr) ->
  [_,_|Nss] = Ss,
  NewStack = yeccpars2_17_(Stack),
- yeccgoto_select_list(hd(Nss), Cat, Nss, NewStack, T, Ts, Tzr).
+ 'yeccgoto_\'SelectList\''(hd(Nss), Cat, Nss, NewStack, T, Ts, Tzr).
 
 yeccpars2_18(_S, Cat, Ss, Stack, T, Ts, Tzr) ->
  [_,_|Nss] = Ss,
  NewStack = yeccpars2_18_(Stack),
- yeccgoto_select_statement(hd(Nss), Cat, Nss, NewStack, T, Ts, Tzr).
+ 'yeccgoto_\'SelectStatement\''(hd(Nss), Cat, Nss, NewStack, T, Ts, Tzr).
 
 yeccpars2_19(_S, Cat, Ss, Stack, T, Ts, Tzr) ->
- yeccgoto_table_expression(hd(Ss), Cat, Ss, Stack, T, Ts, Tzr).
+ 'yeccgoto_\'TableExpression\''(hd(Ss), Cat, Ss, Stack, T, Ts, Tzr).
 
 -dialyzer({nowarn_function, yeccpars2_20/7}).
 yeccpars2_20(S, tk_var, Ss, Stack, T, Ts, Tzr) ->
@@ -369,29 +370,29 @@ yeccpars2_21(S, tk_as, Ss, Stack, T, Ts, Tzr) ->
  yeccpars1(S, 27, Ss, Stack, T, Ts, Tzr);
 yeccpars2_21(_S, Cat, Ss, Stack, T, Ts, Tzr) ->
  NewStack = yeccpars2_21_(Stack),
- yeccgoto_table_elem(hd(Ss), Cat, Ss, NewStack, T, Ts, Tzr).
+ 'yeccgoto_\'TableElem\''(hd(Ss), Cat, Ss, NewStack, T, Ts, Tzr).
 
 yeccpars2_22(_S, Cat, Ss, Stack, T, Ts, Tzr) ->
  [_|Nss] = Ss,
  NewStack = yeccpars2_22_(Stack),
- yeccgoto_from_clause(hd(Nss), Cat, Nss, NewStack, T, Ts, Tzr).
+ 'yeccgoto_\'FromClause\''(hd(Nss), Cat, Nss, NewStack, T, Ts, Tzr).
 
 yeccpars2_23(S, tk_comma, Ss, Stack, T, Ts, Tzr) ->
  yeccpars1(S, 25, Ss, Stack, T, Ts, Tzr);
 yeccpars2_23(_S, Cat, Ss, Stack, T, Ts, Tzr) ->
  NewStack = yeccpars2_23_(Stack),
- yeccgoto_table_list(hd(Ss), Cat, Ss, NewStack, T, Ts, Tzr).
+ 'yeccgoto_\'TableList\''(hd(Ss), Cat, Ss, NewStack, T, Ts, Tzr).
 
 yeccpars2_24(_S, Cat, Ss, Stack, T, Ts, Tzr) ->
  NewStack = yeccpars2_24_(Stack),
- yeccgoto_table_name(hd(Ss), Cat, Ss, NewStack, T, Ts, Tzr).
+ 'yeccgoto_\'TableName\''(hd(Ss), Cat, Ss, NewStack, T, Ts, Tzr).
 
 %% yeccpars2_25: see yeccpars2_20
 
 yeccpars2_26(_S, Cat, Ss, Stack, T, Ts, Tzr) ->
  [_,_|Nss] = Ss,
  NewStack = yeccpars2_26_(Stack),
- yeccgoto_table_list(hd(Nss), Cat, Nss, NewStack, T, Ts, Tzr).
+ 'yeccgoto_\'TableList\''(hd(Nss), Cat, Nss, NewStack, T, Ts, Tzr).
 
 -dialyzer({nowarn_function, yeccpars2_27/7}).
 yeccpars2_27(S, tk_string, Ss, Stack, T, Ts, Tzr) ->
@@ -404,11 +405,11 @@ yeccpars2_27(_, _, _, _, T, _, _) ->
 yeccpars2_28(_S, Cat, Ss, Stack, T, Ts, Tzr) ->
  [_,_|Nss] = Ss,
  NewStack = yeccpars2_28_(Stack),
- yeccgoto_table_elem(hd(Nss), Cat, Nss, NewStack, T, Ts, Tzr).
+ 'yeccgoto_\'TableElem\''(hd(Nss), Cat, Nss, NewStack, T, Ts, Tzr).
 
 yeccpars2_29(_S, Cat, Ss, Stack, T, Ts, Tzr) ->
  NewStack = yeccpars2_29_(Stack),
- yeccgoto_table_label(hd(Ss), Cat, Ss, NewStack, T, Ts, Tzr).
+ 'yeccgoto_\'TableLabel\''(hd(Ss), Cat, Ss, NewStack, T, Ts, Tzr).
 
 -dialyzer({nowarn_function, yeccpars2_30/7}).
 yeccpars2_30(S, tk_var, Ss, Stack, T, Ts, Tzr) ->
@@ -419,61 +420,61 @@ yeccpars2_30(_, _, _, _, T, _, _) ->
 yeccpars2_31(_S, Cat, Ss, Stack, T, Ts, Tzr) ->
  [_,_|Nss] = Ss,
  NewStack = yeccpars2_31_(Stack),
- yeccgoto_qualified_name(hd(Nss), Cat, Nss, NewStack, T, Ts, Tzr).
+ 'yeccgoto_\'QualifiedName\''(hd(Nss), Cat, Nss, NewStack, T, Ts, Tzr).
 
-yeccgoto_column_label(12=_S, Cat, Ss, Stack, T, Ts, Tzr) ->
+'yeccgoto_\'ColumnLabel\''(12=_S, Cat, Ss, Stack, T, Ts, Tzr) ->
  yeccpars2_13(_S, Cat, Ss, Stack, T, Ts, Tzr).
 
-yeccgoto_from_clause(6=_S, Cat, Ss, Stack, T, Ts, Tzr) ->
+'yeccgoto_\'FromClause\''(6=_S, Cat, Ss, Stack, T, Ts, Tzr) ->
  yeccpars2_19(_S, Cat, Ss, Stack, T, Ts, Tzr).
 
-yeccgoto_qualified_name(4, Cat, Ss, Stack, T, Ts, Tzr) ->
+'yeccgoto_\'QualifiedName\''(4, Cat, Ss, Stack, T, Ts, Tzr) ->
  yeccpars2_8(8, Cat, Ss, Stack, T, Ts, Tzr);
-yeccgoto_qualified_name(16, Cat, Ss, Stack, T, Ts, Tzr) ->
+'yeccgoto_\'QualifiedName\''(16, Cat, Ss, Stack, T, Ts, Tzr) ->
  yeccpars2_8(8, Cat, Ss, Stack, T, Ts, Tzr).
 
-yeccgoto_query(0, Cat, Ss, Stack, T, Ts, Tzr) ->
+'yeccgoto_\'Query\''(0, Cat, Ss, Stack, T, Ts, Tzr) ->
  yeccpars2_3(3, Cat, Ss, Stack, T, Ts, Tzr).
 
-yeccgoto_select_elem(4, Cat, Ss, Stack, T, Ts, Tzr) ->
+'yeccgoto_\'SelectElem\''(4, Cat, Ss, Stack, T, Ts, Tzr) ->
  yeccpars2_7(7, Cat, Ss, Stack, T, Ts, Tzr);
-yeccgoto_select_elem(16, Cat, Ss, Stack, T, Ts, Tzr) ->
+'yeccgoto_\'SelectElem\''(16, Cat, Ss, Stack, T, Ts, Tzr) ->
  yeccpars2_7(7, Cat, Ss, Stack, T, Ts, Tzr).
 
-yeccgoto_select_list(4, Cat, Ss, Stack, T, Ts, Tzr) ->
+'yeccgoto_\'SelectList\''(4, Cat, Ss, Stack, T, Ts, Tzr) ->
  yeccpars2_6(6, Cat, Ss, Stack, T, Ts, Tzr);
-yeccgoto_select_list(16=_S, Cat, Ss, Stack, T, Ts, Tzr) ->
+'yeccgoto_\'SelectList\''(16=_S, Cat, Ss, Stack, T, Ts, Tzr) ->
  yeccpars2_17(_S, Cat, Ss, Stack, T, Ts, Tzr).
 
-yeccgoto_select_statement(0=_S, Cat, Ss, Stack, T, Ts, Tzr) ->
+'yeccgoto_\'SelectStatement\''(0=_S, Cat, Ss, Stack, T, Ts, Tzr) ->
  yeccpars2_2(_S, Cat, Ss, Stack, T, Ts, Tzr).
 
-yeccgoto_statement(0=_S, Cat, Ss, Stack, T, Ts, Tzr) ->
+'yeccgoto_\'Statement\''(0=_S, Cat, Ss, Stack, T, Ts, Tzr) ->
  yeccpars2_1(_S, Cat, Ss, Stack, T, Ts, Tzr).
 
-yeccgoto_table_elem(20, Cat, Ss, Stack, T, Ts, Tzr) ->
+'yeccgoto_\'TableElem\''(20, Cat, Ss, Stack, T, Ts, Tzr) ->
  yeccpars2_23(23, Cat, Ss, Stack, T, Ts, Tzr);
-yeccgoto_table_elem(25, Cat, Ss, Stack, T, Ts, Tzr) ->
+'yeccgoto_\'TableElem\''(25, Cat, Ss, Stack, T, Ts, Tzr) ->
  yeccpars2_23(23, Cat, Ss, Stack, T, Ts, Tzr).
 
-yeccgoto_table_expression(6=_S, Cat, Ss, Stack, T, Ts, Tzr) ->
+'yeccgoto_\'TableExpression\''(6=_S, Cat, Ss, Stack, T, Ts, Tzr) ->
  yeccpars2_18(_S, Cat, Ss, Stack, T, Ts, Tzr).
 
-yeccgoto_table_label(4, Cat, Ss, Stack, T, Ts, Tzr) ->
+'yeccgoto_\'TableLabel\''(4, Cat, Ss, Stack, T, Ts, Tzr) ->
  yeccpars2_5(5, Cat, Ss, Stack, T, Ts, Tzr);
-yeccgoto_table_label(16, Cat, Ss, Stack, T, Ts, Tzr) ->
+'yeccgoto_\'TableLabel\''(16, Cat, Ss, Stack, T, Ts, Tzr) ->
  yeccpars2_5(5, Cat, Ss, Stack, T, Ts, Tzr);
-yeccgoto_table_label(27=_S, Cat, Ss, Stack, T, Ts, Tzr) ->
+'yeccgoto_\'TableLabel\''(27=_S, Cat, Ss, Stack, T, Ts, Tzr) ->
  yeccpars2_28(_S, Cat, Ss, Stack, T, Ts, Tzr).
 
-yeccgoto_table_list(20=_S, Cat, Ss, Stack, T, Ts, Tzr) ->
+'yeccgoto_\'TableList\''(20=_S, Cat, Ss, Stack, T, Ts, Tzr) ->
  yeccpars2_22(_S, Cat, Ss, Stack, T, Ts, Tzr);
-yeccgoto_table_list(25=_S, Cat, Ss, Stack, T, Ts, Tzr) ->
+'yeccgoto_\'TableList\''(25=_S, Cat, Ss, Stack, T, Ts, Tzr) ->
  yeccpars2_26(_S, Cat, Ss, Stack, T, Ts, Tzr).
 
-yeccgoto_table_name(20, Cat, Ss, Stack, T, Ts, Tzr) ->
+'yeccgoto_\'TableName\''(20, Cat, Ss, Stack, T, Ts, Tzr) ->
  yeccpars2_21(21, Cat, Ss, Stack, T, Ts, Tzr);
-yeccgoto_table_name(25, Cat, Ss, Stack, T, Ts, Tzr) ->
+'yeccgoto_\'TableName\''(25, Cat, Ss, Stack, T, Ts, Tzr) ->
  yeccpars2_21(21, Cat, Ss, Stack, T, Ts, Tzr).
 
 -compile({inline,yeccpars2_7_/1}).
@@ -569,7 +570,7 @@ yeccpars2_17_(__Stack0) ->
 yeccpars2_18_(__Stack0) ->
  [__3,__2,__1 | __Stack] = __Stack0,
  [begin
-   { __1 , __2 , __3 }
+   build_ast_node ( 'SelectStatement' , # { select_list => __2 , table_expression => __3 } )
   end | __Stack].
 
 -compile({inline,yeccpars2_21_/1}).
@@ -637,4 +638,4 @@ yeccpars2_31_(__Stack0) ->
   end | __Stack].
 
 
--file("src/exdb_parser.yrl", 79).
+-file("src/exdb_parser.yrl", 80).

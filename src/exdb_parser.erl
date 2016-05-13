@@ -1,6 +1,6 @@
 -module(exdb_parser).
 -export([parse/1, parse_and_scan/1, format_error/1]).
--file("src/exdb_parser.yrl", 73).
+-file("src/exdb_parser.yrl", 59).
 
 extract_token({Tok, _}) -> Tok.
 extract_val({_, _, Val}) -> Val.
@@ -259,7 +259,8 @@ yeccpars2_0(_, _, _, _, T, _, _) ->
  yeccerror(T).
 
 yeccpars2_1(_S, Cat, Ss, Stack, T, Ts, Tzr) ->
- 'yeccgoto_\'Query\''(hd(Ss), Cat, Ss, Stack, T, Ts, Tzr).
+ NewStack = yeccpars2_1_(Stack),
+ 'yeccgoto_\'Query\''(hd(Ss), Cat, Ss, NewStack, T, Ts, Tzr).
 
 yeccpars2_2(_S, Cat, Ss, Stack, T, Ts, Tzr) ->
  'yeccgoto_\'Statement\''(hd(Ss), Cat, Ss, Stack, T, Ts, Tzr).
@@ -305,7 +306,8 @@ yeccpars2_8(_S, Cat, Ss, Stack, T, Ts, Tzr) ->
  'yeccgoto_\'SelectElem\''(hd(Ss), Cat, Ss, NewStack, T, Ts, Tzr).
 
 yeccpars2_9(_S, Cat, Ss, Stack, T, Ts, Tzr) ->
- 'yeccgoto_\'SelectElem\''(hd(Ss), Cat, Ss, Stack, T, Ts, Tzr).
+ NewStack = yeccpars2_9_(Stack),
+ 'yeccgoto_\'SelectElem\''(hd(Ss), Cat, Ss, NewStack, T, Ts, Tzr).
 
 yeccpars2_10(_S, Cat, Ss, Stack, T, Ts, Tzr) ->
  NewStack = yeccpars2_10_(Stack),
@@ -355,10 +357,11 @@ yeccpars2_17(_S, Cat, Ss, Stack, T, Ts, Tzr) ->
 yeccpars2_18(_S, Cat, Ss, Stack, T, Ts, Tzr) ->
  [_,_|Nss] = Ss,
  NewStack = yeccpars2_18_(Stack),
- 'yeccgoto_\'SelectStatement\''(hd(Nss), Cat, Nss, NewStack, T, Ts, Tzr).
+ 'yeccgoto_\'SelectStmt\''(hd(Nss), Cat, Nss, NewStack, T, Ts, Tzr).
 
 yeccpars2_19(_S, Cat, Ss, Stack, T, Ts, Tzr) ->
- 'yeccgoto_\'TableExpression\''(hd(Ss), Cat, Ss, Stack, T, Ts, Tzr).
+ NewStack = yeccpars2_19_(Stack),
+ 'yeccgoto_\'TableExpr\''(hd(Ss), Cat, Ss, NewStack, T, Ts, Tzr).
 
 -dialyzer({nowarn_function, yeccpars2_20/7}).
 yeccpars2_20(S, tk_var, Ss, Stack, T, Ts, Tzr) ->
@@ -446,7 +449,7 @@ yeccpars2_31(_S, Cat, Ss, Stack, T, Ts, Tzr) ->
 'yeccgoto_\'SelectList\''(16=_S, Cat, Ss, Stack, T, Ts, Tzr) ->
  yeccpars2_17(_S, Cat, Ss, Stack, T, Ts, Tzr).
 
-'yeccgoto_\'SelectStatement\''(0=_S, Cat, Ss, Stack, T, Ts, Tzr) ->
+'yeccgoto_\'SelectStmt\''(0=_S, Cat, Ss, Stack, T, Ts, Tzr) ->
  yeccpars2_2(_S, Cat, Ss, Stack, T, Ts, Tzr).
 
 'yeccgoto_\'Statement\''(0=_S, Cat, Ss, Stack, T, Ts, Tzr) ->
@@ -457,7 +460,7 @@ yeccpars2_31(_S, Cat, Ss, Stack, T, Ts, Tzr) ->
 'yeccgoto_\'TableElem\''(25, Cat, Ss, Stack, T, Ts, Tzr) ->
  yeccpars2_23(23, Cat, Ss, Stack, T, Ts, Tzr).
 
-'yeccgoto_\'TableExpression\''(6=_S, Cat, Ss, Stack, T, Ts, Tzr) ->
+'yeccgoto_\'TableExpr\''(6=_S, Cat, Ss, Stack, T, Ts, Tzr) ->
  yeccpars2_18(_S, Cat, Ss, Stack, T, Ts, Tzr).
 
 'yeccgoto_\'TableLabel\''(4, Cat, Ss, Stack, T, Ts, Tzr) ->
@@ -477,8 +480,16 @@ yeccpars2_31(_S, Cat, Ss, Stack, T, Ts, Tzr) ->
 'yeccgoto_\'TableName\''(25, Cat, Ss, Stack, T, Ts, Tzr) ->
  yeccpars2_21(21, Cat, Ss, Stack, T, Ts, Tzr).
 
+-compile({inline,yeccpars2_1_/1}).
+-file("src/exdb_parser.yrl", 19).
+yeccpars2_1_(__Stack0) ->
+ [__1 | __Stack] = __Stack0,
+ [begin
+   build_ast_node ( 'Query' , # { statement => __1 } )
+  end | __Stack].
+
 -compile({inline,yeccpars2_7_/1}).
--file("src/exdb_parser.yrl", 41).
+-file("src/exdb_parser.yrl", 27).
 yeccpars2_7_(__Stack0) ->
  [__1 | __Stack] = __Stack0,
  [begin
@@ -486,15 +497,23 @@ yeccpars2_7_(__Stack0) ->
   end | __Stack].
 
 -compile({inline,yeccpars2_8_/1}).
--file("src/exdb_parser.yrl", 45).
+-file("src/exdb_parser.yrl", 31).
 yeccpars2_8_(__Stack0) ->
  [__1 | __Stack] = __Stack0,
  [begin
-   { __1 }
+   build_ast_node ( 'SelectElem' , # { expr => __1 } )
+  end | __Stack].
+
+-compile({inline,yeccpars2_9_/1}).
+-file("src/exdb_parser.yrl", 30).
+yeccpars2_9_(__Stack0) ->
+ [__1 | __Stack] = __Stack0,
+ [begin
+   build_ast_node ( 'SelectElem' , # { expr => extract_token ( __1 ) } )
   end | __Stack].
 
 -compile({inline,yeccpars2_10_/1}).
--file("src/exdb_parser.yrl", 67).
+-file("src/exdb_parser.yrl", 53).
 yeccpars2_10_(__Stack0) ->
  [__1 | __Stack] = __Stack0,
  [begin
@@ -502,31 +521,31 @@ yeccpars2_10_(__Stack0) ->
   end | __Stack].
 
 -compile({inline,yeccpars2_11_tk_as/1}).
--file("src/exdb_parser.yrl", 48).
+-file("src/exdb_parser.yrl", 34).
 yeccpars2_11_tk_as(__Stack0) ->
  [__1 | __Stack] = __Stack0,
  [begin
-   { extract_val ( __1 ) }
+   build_ast_node ( 'QualifiedName' , # { column => extract_val ( __1 ) } )
   end | __Stack].
 
 -compile({inline,yeccpars2_11_tk_comma/1}).
--file("src/exdb_parser.yrl", 48).
+-file("src/exdb_parser.yrl", 34).
 yeccpars2_11_tk_comma(__Stack0) ->
  [__1 | __Stack] = __Stack0,
  [begin
-   { extract_val ( __1 ) }
+   build_ast_node ( 'QualifiedName' , # { column => extract_val ( __1 ) } )
   end | __Stack].
 
 -compile({inline,yeccpars2_11_tk_from/1}).
--file("src/exdb_parser.yrl", 48).
+-file("src/exdb_parser.yrl", 34).
 yeccpars2_11_tk_from(__Stack0) ->
  [__1 | __Stack] = __Stack0,
  [begin
-   { extract_val ( __1 ) }
+   build_ast_node ( 'QualifiedName' , # { column => extract_val ( __1 ) } )
   end | __Stack].
 
 -compile({inline,yeccpars2_11_/1}).
--file("src/exdb_parser.yrl", 66).
+-file("src/exdb_parser.yrl", 52).
 yeccpars2_11_(__Stack0) ->
  [__1 | __Stack] = __Stack0,
  [begin
@@ -534,15 +553,15 @@ yeccpars2_11_(__Stack0) ->
   end | __Stack].
 
 -compile({inline,yeccpars2_13_/1}).
--file("src/exdb_parser.yrl", 46).
+-file("src/exdb_parser.yrl", 32).
 yeccpars2_13_(__Stack0) ->
  [__3,__2,__1 | __Stack] = __Stack0,
  [begin
-   { __1 , __3 }
+   build_ast_node ( 'SelectElem' , # { expr => __1 , as => __3 } )
   end | __Stack].
 
 -compile({inline,yeccpars2_14_/1}).
--file("src/exdb_parser.yrl", 52).
+-file("src/exdb_parser.yrl", 38).
 yeccpars2_14_(__Stack0) ->
  [__1 | __Stack] = __Stack0,
  [begin
@@ -550,7 +569,7 @@ yeccpars2_14_(__Stack0) ->
   end | __Stack].
 
 -compile({inline,yeccpars2_15_/1}).
--file("src/exdb_parser.yrl", 51).
+-file("src/exdb_parser.yrl", 37).
 yeccpars2_15_(__Stack0) ->
  [__1 | __Stack] = __Stack0,
  [begin
@@ -558,7 +577,7 @@ yeccpars2_15_(__Stack0) ->
   end | __Stack].
 
 -compile({inline,yeccpars2_17_/1}).
--file("src/exdb_parser.yrl", 42).
+-file("src/exdb_parser.yrl", 28).
 yeccpars2_17_(__Stack0) ->
  [__3,__2,__1 | __Stack] = __Stack0,
  [begin
@@ -566,31 +585,39 @@ yeccpars2_17_(__Stack0) ->
   end | __Stack].
 
 -compile({inline,yeccpars2_18_/1}).
--file("src/exdb_parser.yrl", 39).
+-file("src/exdb_parser.yrl", 25).
 yeccpars2_18_(__Stack0) ->
  [__3,__2,__1 | __Stack] = __Stack0,
  [begin
-   build_ast_node ( 'SelectStatement' , # { select_list => __2 , table_expression => __3 } )
+   build_ast_node ( 'SelectStmt' , # { exprs => __2 , table_expr => __3 } )
+  end | __Stack].
+
+-compile({inline,yeccpars2_19_/1}).
+-file("src/exdb_parser.yrl", 40).
+yeccpars2_19_(__Stack0) ->
+ [__1 | __Stack] = __Stack0,
+ [begin
+   build_ast_node ( 'TableExpr' , # { from => __1 } )
   end | __Stack].
 
 -compile({inline,yeccpars2_21_/1}).
--file("src/exdb_parser.yrl", 61).
+-file("src/exdb_parser.yrl", 47).
 yeccpars2_21_(__Stack0) ->
  [__1 | __Stack] = __Stack0,
  [begin
-   { __1 }
+   build_ast_node ( 'TableElem' , # { expr => __1 } )
   end | __Stack].
 
 -compile({inline,yeccpars2_22_/1}).
--file("src/exdb_parser.yrl", 56).
+-file("src/exdb_parser.yrl", 42).
 yeccpars2_22_(__Stack0) ->
  [__2,__1 | __Stack] = __Stack0,
  [begin
-   { __2 }
+   build_ast_node ( 'FromClause' , # { exprs => __2 } )
   end | __Stack].
 
 -compile({inline,yeccpars2_23_/1}).
--file("src/exdb_parser.yrl", 58).
+-file("src/exdb_parser.yrl", 44).
 yeccpars2_23_(__Stack0) ->
  [__1 | __Stack] = __Stack0,
  [begin
@@ -598,7 +625,7 @@ yeccpars2_23_(__Stack0) ->
   end | __Stack].
 
 -compile({inline,yeccpars2_24_/1}).
--file("src/exdb_parser.yrl", 64).
+-file("src/exdb_parser.yrl", 50).
 yeccpars2_24_(__Stack0) ->
  [__1 | __Stack] = __Stack0,
  [begin
@@ -606,7 +633,7 @@ yeccpars2_24_(__Stack0) ->
   end | __Stack].
 
 -compile({inline,yeccpars2_26_/1}).
--file("src/exdb_parser.yrl", 59).
+-file("src/exdb_parser.yrl", 45).
 yeccpars2_26_(__Stack0) ->
  [__3,__2,__1 | __Stack] = __Stack0,
  [begin
@@ -614,15 +641,15 @@ yeccpars2_26_(__Stack0) ->
   end | __Stack].
 
 -compile({inline,yeccpars2_28_/1}).
--file("src/exdb_parser.yrl", 62).
+-file("src/exdb_parser.yrl", 48).
 yeccpars2_28_(__Stack0) ->
  [__3,__2,__1 | __Stack] = __Stack0,
  [begin
-   { __1 , __3 }
+   build_ast_node ( 'TableElem' , # { expr => __1 , as => __3 } )
   end | __Stack].
 
 -compile({inline,yeccpars2_29_/1}).
--file("src/exdb_parser.yrl", 66).
+-file("src/exdb_parser.yrl", 52).
 yeccpars2_29_(__Stack0) ->
  [__1 | __Stack] = __Stack0,
  [begin
@@ -630,12 +657,12 @@ yeccpars2_29_(__Stack0) ->
   end | __Stack].
 
 -compile({inline,yeccpars2_31_/1}).
--file("src/exdb_parser.yrl", 49).
+-file("src/exdb_parser.yrl", 35).
 yeccpars2_31_(__Stack0) ->
  [__3,__2,__1 | __Stack] = __Stack0,
  [begin
-   { extract_val ( __3 ) , __1 }
+   build_ast_node ( 'QualifiedName' , # { table => extract_val ( __3 ) , column => __1 } )
   end | __Stack].
 
 
--file("src/exdb_parser.yrl", 80).
+-file("src/exdb_parser.yrl", 66).

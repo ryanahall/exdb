@@ -2,6 +2,8 @@ Definitions.
 
 % Reserved words
 SELECT = (S|s)(E|e)(L|l)(E|e)(C|c)(T|t)
+CREATE = (C|c)(R|r)(E|e)(A|a)(T|t)(E|e)
+TABLE = (T|t)(A|a)(B|b)(L|l)(E|e)
 FROM = (F|f)(R|r)(O|o)(M|m)
 AS = (A|a)(S|s)
 WHERE = (W|w)(H|h)(E|e)(R|r)(E|e)
@@ -10,6 +12,10 @@ OR = (O|o)(R|r)
 IN = (I|i)(N|n)
 NOT = (N|n)(O|o)(T|t)
 NULL = (N|n)(U|u)(L|l)(L|l)
+TEXT = (T|t)(E|e)(X|x)(T|t)
+INTEGER = (I|i)(N|n)(T|t)(E|e)(G|g)(E|e)(R|r)
+REAL = (R|r)(E|e)(A|a)(L|l)
+BLOB = (B|b)(L|l)(O|o)(B|b)
 
 % Identifiers
 IDENTIFIER = ([a-zA-Z_][a-zA-Z0-9_]*)
@@ -45,6 +51,8 @@ WHITESPACE = ([\000-\s]*)
 Rules.
 
 {SELECT}     : {token, {select, list_to_binary(TokenChars)}}.
+{CREATE}     : {token, {create, list_to_binary(TokenChars)}}.
+{TABLE}      : {token, {table, list_to_binary(TokenChars)}}.
 {FROM}       : {token, {from, list_to_binary(TokenChars)}}.
 {AS}         : {token, {as, list_to_binary(TokenChars)}}.
 {WHERE}      : {token, {where, list_to_binary(TokenChars)}}.
@@ -53,9 +61,13 @@ Rules.
 {IN}         : {token, {in, list_to_binary(TokenChars)}}.
 {NOT}        : {token, {not_, list_to_binary(TokenChars)}}.
 {NULL}       : {token, {null, list_to_binary(TokenChars)}}.
+{TEXT}       : {token, {text, list_to_binary(TokenChars)}}.
+{INTEGER}    : {token, {integer, list_to_binary(TokenChars)}}.
+{REAL}       : {token, {real, list_to_binary(TokenChars)}}.
+{BLOB}       : {token, {blob, list_to_binary(TokenChars)}}.
 
 {IDENTIFIER} : {token, {identifier, list_to_atom(TokenChars)}}.
-{INTUMBER}   : {token, {integer, list_to_integer(TokenChars)}}.
+{INTUMBER}   : {token, {intnumber, list_to_integer(TokenChars)}}.
 {QUOTED}     : {token, {string, strip(TokenChars, TokenLen)}}.
 
 {PLUS}       : {token, {plus, list_to_binary(TokenChars)}}.

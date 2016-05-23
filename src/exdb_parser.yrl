@@ -1,4 +1,8 @@
 Nonterminals
+DataType
+ColumnDefList
+ColumnDefs
+ColumnDef
 Operator
 Comparator
 Query
@@ -6,6 +10,8 @@ Statement
 SelectStmt
 SelectList
 SelectElem
+CreateTableStmt
+ColumnDef
 QualifiedName
 ColumnLabel
 TableExpr
@@ -17,6 +23,8 @@ TableLabel.
 
 Terminals
 select
+create
+table
 from
 as
 where
@@ -25,8 +33,12 @@ or_
 not_
 in
 null
-identifier
+text
 integer
+real
+blob
+identifier
+intnumber
 string
 plus
 minus
@@ -39,6 +51,7 @@ gte
 gt
 ne
 lparen
+rparen
 comma
 semicolon
 dot.
@@ -57,11 +70,29 @@ Comparator -> eq : '$1'.
 Comparator -> gte : '$1'.
 Comparator -> gt : '$1'.
 
+DataType -> text : '$1'.
+DataType -> integer : '$1'.
+DataType -> real : '$1'.
+DataType -> blob : '$1'.
+
 Query -> Statement : build_ast_node('Query', #{'statement' => '$1'}).
 
 %% TODO: add support for other statement types
 Statement -> SelectStmt : '$1'.
 
+%% Create table statement
+CreateTableStmt -> create table TableName ColumnDefList :
+  build_ast_node('CreateTableStmt', #{'table' => '$3', 'column_defs' => '$4'}).
+
+ColumnDefList -> lparen ColumnDefs rparen : '$2'.
+ColumnDefList -> ColumnDefs : '$1'
+
+ColumnDefs -> ColumnDef : ['$1'].
+ColumnDefs -> ColumnDef comma ColumnDefs : ['$1'|'$3'].
+
+ColumnDef -> identifier DataType : build_ast_node('ColumnDef', #{'name' => '$1', 'type' => '$2'}).
+
+%% Select statement
 SelectStmt -> select SelectList TableExpr:
   build_ast_node('SelectStmt', #{'exprs' => '$2', 'table_expr' => '$3'}).
 

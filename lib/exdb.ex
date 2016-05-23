@@ -52,7 +52,7 @@ defmodule Exdb do
   defp serve(socket) do
     result =
       case :gen_tcp.recv(socket, 0) do
-        {:ok, line} -> {:ok, "received msg: #{line}\n"}
+        {:ok, line} -> handle_message(line)
         {:error, reason} -> {:error, reason}
       end
 
@@ -63,5 +63,15 @@ defmodule Exdb do
       {:error, :closed} -> Logger.info "Closed connection from host"
       {:error, reason} -> serve(socket)
     end
+  end
+
+  defp handle_message(line) do
+    line
+     |> Lexer.tokenize
+     # TODO: fix this
+     |> elem(1)
+     |> Parser.parse
+     |> IO.inspect
+    {:ok, "Handled request #{line}\n"}
   end
 end
